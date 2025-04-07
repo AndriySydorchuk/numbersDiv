@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    margin: auto;
+}
+.top-bar {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+.sidebar {
+    margin-right: auto;
+}
+.content {
+    flex-grow: 1;
+    text-align: center;
+    margin-top: 50px;
+    width: 100%;
+}
+select {
+    width: 150px;
+    padding: 10px;
+    font-size: 16px;
+}
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+.result-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    width: 650px;
+}
+.result-item span {
+    word-wrap: break-word;
+    flex-grow: 1;
+    text-align: left;
+}
+.copy-button {
+    padding: 5px 10px;
+    margin-right: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.copy-button:hover {
+    background-color: #0056b3;
+}
+
+#brandSelector {
+    width: 300px;
+}
+
+#inputNumber {
+    width: 650px;
+}

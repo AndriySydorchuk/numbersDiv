@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="sidebar">
+            <select id="brandSelector" onchange="processNumbers()">
+                <option value="mopar">Mopar</option>
+                <option value="toyota">Toyota/Lexus/Scion</option>
+                <option value="subaru">Subaru</option>
+                <option value="alfaromeo">Alfa Romeo</option>
+                <option value="hyundai">Hyundai/KIA/Genesis</option>
+                <option value="maserati">Maserati</option>
+                <option value="nissan">Nissan/Infiniti</option>
+                <option value="mazda">Mazda</option>
+                <option value="mitsubishi">Mitsubishi</option>
+                <option value="tesla">Tesla</option>
+                <option value="vag">Volkswagen/Audi/Porsche</option>
+            </select>
+        </div>
+    </div>
+    <div class="container">
+        <div class="content">
+            <input type="text" id="inputNumber" placeholder="enter" oninput="processNumbers()" />
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
