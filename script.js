@@ -246,19 +246,8 @@ function processVagNumber(number) {
 }
 
 function processMercedesNumber(number) {
-    
 
-    let firstOne = number.slice(0, 1);                  // first 1
-    let firstTwo = number.slice(0, 2);                  // first 2
     let withoutFirstOne = number.slice(1);              // without first 1
-    let withoutFirstTwo = number.slice(2);              // without first 2
-    let withoutLastTwo = number.slice(0, -2);           // without last 2
-    let withoutLast = number.slice(0, -1);              // without last 1
-    let lastChar = number.slice(-1);                    // last
-    let lastTwoChar = number.slice(-2);                 // last two
-    let middle = number.slice(2, -1);                   // without first 2 & last
-    let middleWithoutTwoLast = number.slice(2, -2);     // without first 2 & last
-    let middleWithoutOneLast = number.slice(1, -1);     // without first 1 & last
 
     if (number[0] === 'A' || number[0] === 'a')
     {
@@ -270,6 +259,8 @@ function processMercedesNumber(number) {
         let fifthFour = number.slice(11);
 
         let middleWithoutAandFourLast = number.slice(1, -4);     // without A and last 4
+        let middleWithoutAandTwoLast = number.slice(1, -2);     // without A and last 2
+        let middleWithoutAandSixLast = number.slice(1, -6);     // without A and last 6
 
         // A0068173420
         if (number.length === 11)
@@ -281,6 +272,19 @@ function processMercedesNumber(number) {
         {
             return `${number} | ${middleWithoutAandFourLast} / ${withoutFirstOne} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthFour}`;
         }
+        // A166810940099, 1668109400 / 166810940099 / 166 810 94 00 99
+        if (number.length === 13)
+        {
+            return `${number} | ${middleWithoutAandTwoLast} / ${withoutFirstOne} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthFour}`;
+        }
+        // A2929107202648R02, 2929107202 / 2929107202648R02 / 292 910 72 02 64 8R02
+        if (number.length === 17)
+        {
+            let fifthTwo = number.slice(11, 13);
+            let SixFour = number.slice(13);
+
+            return `${number} | ${middleWithoutAandSixLast} / ${withoutFirstOne} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthTwo} ${SixFour}`;
+        }
     }
     else
     {
@@ -291,6 +295,9 @@ function processMercedesNumber(number) {
         let fifthFour = number.slice(10);
 
         let middleWithoutFourLast = number.slice(0, -4);     // without last 4
+        let middleWithoutTwoLast = number.slice(0, -2);     // without last 2
+        let middleWithoutSixLast = number.slice(0, -6);     // without last 6
+
 
         // 0068173420
         if (number.length === 10)
@@ -301,6 +308,19 @@ function processMercedesNumber(number) {
         if (number.length === 14)
         {
             return `A${number} | ${middleWithoutFourLast} / ${number} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthFour}`;
+        }
+        // A166810940099, 1668109400 / 166810940099 / 166 810 94 00 99
+        if (number.length === 12)
+        {
+            return `A${number} | ${middleWithoutTwoLast} / ${number} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthFour}`;
+        }
+        // A2929107202648R02, 2929107202 / 2929107202648R02 / 292 910 72 02 64 8R02
+        if (number.length === 16)
+        {
+            let fifthTwo = number.slice(10, 12);
+            let SixFour = number.slice(12);
+    
+            return `A${number} | ${middleWithoutSixLast} / ${number} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthTwo} ${SixFour}`;
         }
     }
 
