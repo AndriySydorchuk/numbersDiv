@@ -62,7 +62,7 @@ function processMoparNumber(number) {
     let withoutFirstOne = number.slice(1);              // without first 1
     let withoutFirstTwo = number.slice(2);              // without first 2
     let withoutLastTwo = number.slice(0, -2);           // without last 2
-    let withoutLast = number.slice(0, -1);           // without last 1
+    let withoutLast = number.slice(0, -1);              // without last 1
     let lastChar = number.slice(-1);                    // last
     let lastTwoChar = number.slice(-2);                 // last two
     let middle = number.slice(2, -1);                   // without first 2 & last
