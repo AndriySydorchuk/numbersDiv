@@ -30,26 +30,67 @@ function processNumbers() {
             result = processTeslaNumber(cleanNumber);
         } else if (selectedBrand === 'vag') {
             result = processVagNumber(cleanNumber);
+        } else if (selectedBrand === 'mercedes') {
+            result = processMercedesNumber(cleanNumber);
         }
-
-        const resultItem = document.createElement('div');
-        resultItem.classList.add('result-item');
-
-        const copyButton = document.createElement('button');
-        copyButton.classList.add('copy-button');
-        copyButton.textContent = 'Copy';
-        copyButton.onclick = () => {
-            navigator.clipboard.writeText(result).catch(err => {
-                console.error('Copy error:', err);
+        
+        if (selectedBrand === 'mercedes' && result.includes('|')) {
+            const resultContainer = document.createElement('div');
+            resultContainer.classList.add('result-item');
+            resultContainer.style.display = 'flex';
+            resultContainer.style.flexWrap = 'wrap';
+            resultContainer.style.gap = '8px';
+        
+            const resultParts = result.split('|').map(r => r.trim());
+        
+            resultParts.forEach(res => {
+                const partWrapper = document.createElement('div');
+                partWrapper.style.display = 'flex';
+                partWrapper.style.alignItems = 'center';
+                partWrapper.style.gap = '4px';
+                partWrapper.style.padding = '4px 8px';
+                partWrapper.style.background = '#f9f9f9';
+                partWrapper.style.border = '1px solid #ddd';
+                partWrapper.style.borderRadius = '6px';
+        
+                const copyButton = document.createElement('button');
+                copyButton.classList.add('copy-button');
+                copyButton.textContent = 'Copy';
+                copyButton.onclick = () => {
+                    navigator.clipboard.writeText(res).catch(err => {
+                        console.error('Copy error:', err);
+                    });
+                };
+        
+                const resultText = document.createElement('span');
+                resultText.textContent = res;
+        
+                partWrapper.appendChild(copyButton);
+                partWrapper.appendChild(resultText);
+                resultContainer.appendChild(partWrapper);
             });
-        };
-
-        const resultText = document.createElement('span');
-        resultText.textContent = result;
-
-        resultItem.appendChild(copyButton);
-        resultItem.appendChild(resultText);
-        resultsDiv.appendChild(resultItem);
+        
+            resultsDiv.appendChild(resultContainer);
+        } else {
+            const resultItem = document.createElement('div');
+            resultItem.classList.add('result-item');
+        
+            const copyButton = document.createElement('button');
+            copyButton.classList.add('copy-button');
+            copyButton.textContent = 'Copy';
+            copyButton.onclick = () => {
+                navigator.clipboard.writeText(result).catch(err => {
+                    console.error('Copy error:', err);
+                });
+            };
+        
+            const resultText = document.createElement('span');
+            resultText.textContent = result;
+        
+            resultItem.appendChild(copyButton);
+            resultItem.appendChild(resultText);
+            resultsDiv.appendChild(resultItem);
+        }
     });
 }
 
@@ -200,6 +241,74 @@ function processVagNumber(number) {
     if (number.length === 15) {
         return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 12)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9,12)} ${number.slice(12)}`;
     }
+
+    return "Incorrect number or format.";
+}
+
+function processMercedesNumber(number) {
+    
+
+    let firstOne = number.slice(0, 1);                  // first 1
+    let firstTwo = number.slice(0, 2);                  // first 2
+    let withoutFirstOne = number.slice(1);              // without first 1
+    let withoutFirstTwo = number.slice(2);              // without first 2
+    let withoutLastTwo = number.slice(0, -2);           // without last 2
+    let withoutLast = number.slice(0, -1);              // without last 1
+    let lastChar = number.slice(-1);                    // last
+    let lastTwoChar = number.slice(-2);                 // last two
+    let middle = number.slice(2, -1);                   // without first 2 & last
+    let middleWithoutTwoLast = number.slice(2, -2);     // without first 2 & last
+    let middleWithoutOneLast = number.slice(1, -1);     // without first 1 & last
+
+    if (number[0] === 'A' || number[0] === 'a')
+    {
+        
+        let firstThree = number.slice(1,4);
+        let secondThree = number.slice(4,7);
+        let thirdTwo = number.slice(7,9);
+        let fourthTwo = number.slice(9,11);
+        let fifthFour = number.slice(11);
+
+        let middleWithoutAandFourLast = number.slice(1, -4);     // without A and last 4
+
+        // A0068173420
+        if (number.length === 11)
+        {
+            return `${number} / ${withoutFirstOne} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo}`;
+        }
+        // A16681094009H43, 1668109400 / 16681094009H43 / 166 810 94 00 9H43
+        if (number.length === 15)
+        {
+            return `${number} | ${middleWithoutAandFourLast} / ${withoutFirstOne} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthFour}`;
+        }
+    }
+    else
+    {
+        let firstThree = number.slice(0,3);
+        let secondThree = number.slice(3,6);
+        let thirdTwo = number.slice(6,8);
+        let fourthTwo = number.slice(8, 10);
+        let fifthFour = number.slice(10);
+
+        let middleWithoutFourLast = number.slice(0, -4);     // without last 4
+
+        // 0068173420
+        if (number.length === 10)
+        {
+            return `A${number} / ${number} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo}`;
+        }
+        // 16681094009H43
+        if (number.length === 14)
+        {
+            return `A${number} | ${middleWithoutFourLast} / ${number} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthFour}`;
+        }
+    }
+
+
+    if (number.length <= 9) {
+        return `${number} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
+    }
+    
 
     return "Incorrect number or format.";
 }
