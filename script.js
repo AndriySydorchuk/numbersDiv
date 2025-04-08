@@ -95,62 +95,59 @@ function processNumbers() {
 }
 
 function processMoparNumber(number) {
-    const pattern = /^(\w+?)(\w{2})$/;
-    const match = number.match(pattern);
+    const firstChar = number[0];
+    const secondChar = number[1];
+    const lastChar = number.at(-1);
+    const secondLastChar = number.at(-2);
 
-    let firstOne = number.slice(0, 1);                  // first 1
-    let firstTwo = number.slice(0, 2);                  // first 2
-    let withoutFirstOne = number.slice(1);              // without first 1
-    let withoutFirstTwo = number.slice(2);              // without first 2
-    let withoutLastTwo = number.slice(0, -2);           // without last 2
-    let withoutLast = number.slice(0, -1);              // without last 1
-    let lastChar = number.slice(-1);                    // last
-    let lastTwoChar = number.slice(-2);                 // last two
-    let middle = number.slice(2, -1);                   // without first 2 & last
-    let middleWithoutTwoLast = number.slice(2, -2);     // without first 2 & last
-    let middleWithoutOneLast = number.slice(1, -1);     // without first 1 & last
-    
-    let isDigitsOnly = /^\d+$/.test(number);
+    const isDigitsOnly = /^\d+$/.test(number);
 
     if (isDigitsOnly) {
-            // 5005409570 / 500540957 0
-        if (number[0] != '0' && number[number.length - 1] === '0' && number[number.length - 2] != '0') {
-            return `${number} / ${withoutLast} ${lastChar}`;
-        }   // 0500540957 / 0 500540957
-        else if (number[0] === '0' && number[1] != '0' && number[number.length - 1] != '0') {
-            return `${number} / ${firstOne} ${withoutFirstOne}`;
-        }   // 05005409570 / 0 5005409570 / 0 500540957 0
-        else if (number[0] === '0' && number[1] != '0' && number[number.length - 1] === '0' && number[number.length - 2] != '0') {
-            return `${number} / ${firstOne} ${withoutFirstOne} / ${firstOne} ${middleWithoutOneLast} ${lastChar}`;
-        }   // 50054095700 / 500540957 00
-        else if (number[0] != '0' && number[number.length - 1] === '0' && number[number.length - 2] === '0') {
-            return `${number} / ${withoutLastTwo} ${lastTwoChar}`;
-        }   // 00500540957 / 00 500540957
-        else if (number[0] === '0' && number[1] === '0' && number[number.length - 1] != '0') {
-            return `${number} / ${firstTwo} ${withoutFirstTwo}`;
-        }   // 500540957
-        else if (number[0] != '0' && number[number.length - 1] != '0') {
-            return `${number}`;
-        }   // 0050054095700 / 00 50054095700 / 00 500540957 00
-        else if (number[0] === '0' && number[1] === '0' && number[number.length - 1] === '0' && number[number.length - 2] === '0') {
-            return `${number} / ${firstTwo} ${withoutFirstTwo} / ${firstTwo} ${middleWithoutTwoLast} ${lastTwoChar}`;
-        }   // 005005409570 / 00 5005409570 / 00 500540957 0
-        else if (number[0] === '0' && number[1] === '0' && number[number.length - 1] === '0') {
-            return `${number} / ${firstTwo} ${withoutFirstTwo} / ${firstTwo} ${middle} ${lastChar}`;
-        } else {
-            return "Incorrect number or format.";
-        } 
-    } else {
-        if (match) {
-            const full = number;
-            const split = `${match[1]} ${match[2]}`;
-            return `${full} / ${split}`;
-        } else {
-            return "Incorrect number or format.";
+        const len = number.length;
+
+        if (firstChar !== '0' && lastChar === '0' && secondLastChar !== '0') {
+            return `${number} / ${number.slice(0, -1)} ${lastChar}`;
         }
+
+        if (firstChar === '0' && secondChar !== '0' && lastChar !== '0') {
+            return `${number} / ${firstChar} ${number.slice(1)}`;
+        }
+
+        if (firstChar === '0' && secondChar !== '0' && lastChar === '0' && secondLastChar !== '0') {
+            return `${number} / ${firstChar} ${number.slice(1)} / ${firstChar} ${number.slice(1, -1)} ${lastChar}`;
+        }
+
+        if (firstChar !== '0' && lastChar === '0' && secondLastChar === '0') {
+            return `${number} / ${number.slice(0, -2)} ${number.slice(-2)}`;
+        }
+
+        if (firstChar === '0' && secondChar === '0' && lastChar !== '0') {
+            return `${number} / ${number.slice(0, 2)} ${number.slice(2)}`;
+        }
+
+        if (firstChar !== '0' && lastChar !== '0') {
+            return number;
+        }
+
+        if (firstChar === '0' && secondChar === '0' && lastChar === '0' && secondLastChar === '0') {
+            return `${number} / ${number.slice(0, 2)} ${number.slice(2)} / ${number.slice(0, 2)} ${number.slice(2, -2)} ${number.slice(-2)}`;
+        }
+
+        if (firstChar === '0' && secondChar === '0' && lastChar === '0') {
+            return `${number} / ${number.slice(0, 2)} ${number.slice(2)} / ${number.slice(0, 2)} ${number.slice(2, -1)} ${lastChar}`;
+        }
+
+        return "Incorrect number or format.";
     }
-    
+
+    const match = number.match(/^(\w+?)(\w{2})$/);
+    if (match) {
+        return `${number} / ${match[1]} ${match[2]}`;
+    }
+
+    return "Incorrect number or format.";
 }
+
 
 function processToyotaOrSubaruNumber(number) {
     const mainPartLength = 10;
