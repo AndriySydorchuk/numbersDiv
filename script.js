@@ -32,6 +32,8 @@ function processNumbers() {
             result = processVagNumber(cleanNumber);
         } else if (selectedBrand === 'mercedes') {
             result = processMercedesNumber(cleanNumber);
+        } else if (selectedBrand === 'bmw') {
+            result = processBmwNumber(cleanNumber);
         }
         
         if (selectedBrand === 'mercedes' && result.includes('|')) {
@@ -292,4 +294,25 @@ function processMercedesNumber(number) {
     }
 
     return "Incorrect number or format.";
+}
+
+function processBmwNumber(number) {
+    //const onlyDigits = number.replace(/\D/g, '');
+
+    if (number.length === 7) {
+        // Short number: 7 221 001
+        const part1 = number.slice(0, 1);
+        const part2 = number.slice(1, 4);
+        const part3 = number.slice(4);
+        return `${number} / ${part1} ${part2} ${part3}`;
+    }
+
+    if (number.length === 11) {
+        // Long number: 5143 7288219 and 51 43 7 288 219
+        const split1 = `${number.slice(0, 4)} ${number.slice(4)}`;
+        const split2 = `${number.slice(0, 2)} ${number.slice(2, 4)} ${number.slice(4, 5)} ${number.slice(5, 8)} ${number.slice(8)}`;
+        return `${number} / ${split1} / ${split2}`;
+    }
+
+    return "Incorrect number or unsupported format.";
 }
