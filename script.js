@@ -1,3 +1,17 @@
+document.getElementById('brandSelector').addEventListener('change', function() {
+    localStorage.setItem('selectedBrand', this.value);
+    processNumbers();
+});
+
+window.onload = function() {
+    const savedBrand = localStorage.getItem('selectedBrand');
+    const brandSelector = document.getElementById('brandSelector');
+    if (savedBrand) {
+        brandSelector.value = savedBrand;
+    }
+    processNumbers();
+};
+
 function processNumbers() {
     const input = document.getElementById('inputNumber').value.trim().toUpperCase();
     const selectedBrand = document.getElementById('brandSelector').value;
