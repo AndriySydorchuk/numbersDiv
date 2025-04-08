@@ -243,89 +243,53 @@ function processVagNumber(number) {
 }
 
 function processMercedesNumber(number) {
+    const isWithA = number[0].toUpperCase() === 'A';
+    const raw = isWithA ? number.slice(1) : number;
+    const len = number.length;
 
-    let withoutFirstOne = number.slice(1);              // without first 1
+    const firstThree = raw.slice(0, 3);
+    const secondThree = raw.slice(3, 6);
+    const thirdTwo = raw.slice(6, 8);
+    const fourthTwo = raw.slice(8, 10);
+    const fifthTwo = raw.slice(10, 12);
+    const fifthFour = raw.slice(10);
+    const sixthFour = raw.slice(12);
 
-    if (number[0] === 'A' || number[0] === 'a')
-    {
-        
-        let firstThree = number.slice(1,4);
-        let secondThree = number.slice(4,7);
-        let thirdTwo = number.slice(7,9);
-        let fourthTwo = number.slice(9,11);
-        let fifthFour = number.slice(11);
+    const baseSplit = `${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo}`;
 
-        let middleWithoutAandFourLast = number.slice(1, -4);     // without A and last 4
-        let middleWithoutAandTwoLast = number.slice(1, -2);     // without A and last 2
-        let middleWithoutAandSixLast = number.slice(1, -6);     // without A and last 6
-
-        // A0068173420
-        if (number.length === 11)
-        {
-            return `${number} / ${withoutFirstOne} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo}`;
+    if (isWithA) {
+        if (len === 11) {
+            return `${number} / ${raw} / ${baseSplit}`;
         }
-        // A16681094009H43, 1668109400 / 16681094009H43 / 166 810 94 00 9H43
-        if (number.length === 15)
-        {
-            return `${number} | ${middleWithoutAandFourLast} / ${withoutFirstOne} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthFour}`;
+        if (len === 13) {
+            return `${number} | ${raw.slice(0, -2)} / ${raw} / ${baseSplit} ${fifthFour}`;
         }
-        // A166810940099, 1668109400 / 166810940099 / 166 810 94 00 99
-        if (number.length === 13)
-        {
-            return `${number} | ${middleWithoutAandTwoLast} / ${withoutFirstOne} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthFour}`;
+        if (len === 15) {
+            return `${number} | ${raw.slice(0, -4)} / ${raw} / ${baseSplit} ${fifthFour}`;
         }
-        // A2929107202648R02, 2929107202 / 2929107202648R02 / 292 910 72 02 64 8R02
-        if (number.length === 17)
-        {
-            let fifthTwo = number.slice(11, 13);
-            let SixFour = number.slice(13);
+        if (len === 17) {
+            return `${number} | ${raw.slice(0, -6)} / ${raw} / ${baseSplit} ${fifthTwo} ${sixthFour}`;
+        }
+    } else {
+        const withA = `A${number}`;
 
-            return `${number} | ${middleWithoutAandSixLast} / ${withoutFirstOne} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthTwo} ${SixFour}`;
+        if (len === 10) {
+            return `${withA} / ${number} / ${baseSplit}`;
         }
-    }
-    else
-    {
-        let firstThree = number.slice(0,3);
-        let secondThree = number.slice(3,6);
-        let thirdTwo = number.slice(6,8);
-        let fourthTwo = number.slice(8, 10);
-        let fifthFour = number.slice(10);
-
-        let middleWithoutFourLast = number.slice(0, -4);     // without last 4
-        let middleWithoutTwoLast = number.slice(0, -2);     // without last 2
-        let middleWithoutSixLast = number.slice(0, -6);     // without last 6
-
-
-        // 0068173420
-        if (number.length === 10)
-        {
-            return `A${number} / ${number} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo}`;
+        if (len === 12) {
+            return `${withA} | ${number.slice(0, -2)} / ${number} / ${baseSplit} ${fifthFour}`;
         }
-        // 16681094009H43
-        if (number.length === 14)
-        {
-            return `A${number} | ${middleWithoutFourLast} / ${number} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthFour}`;
+        if (len === 14) {
+            return `${withA} | ${number.slice(0, -4)} / ${number} / ${baseSplit} ${fifthFour}`;
         }
-        // A166810940099, 1668109400 / 166810940099 / 166 810 94 00 99
-        if (number.length === 12)
-        {
-            return `A${number} | ${middleWithoutTwoLast} / ${number} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthFour}`;
-        }
-        // A2929107202648R02, 2929107202 / 2929107202648R02 / 292 910 72 02 64 8R02
-        if (number.length === 16)
-        {
-            let fifthTwo = number.slice(10, 12);
-            let SixFour = number.slice(12);
-    
-            return `A${number} | ${middleWithoutSixLast} / ${number} / ${firstThree} ${secondThree} ${thirdTwo} ${fourthTwo} ${fifthTwo} ${SixFour}`;
+        if (len === 16) {
+            return `${withA} | ${number.slice(0, -6)} / ${number} / ${baseSplit} ${fifthTwo} ${sixthFour}`;
         }
     }
 
-
-    if (number.length <= 9) {
+    if (len <= 9) {
         return `${number} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
     }
-    
 
     return "Incorrect number or format.";
 }
