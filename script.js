@@ -50,6 +50,8 @@ function processNumbers() {
             result = processBmwNumber(cleanNumber);
         } else if (selectedBrand === 'ford') {
             result = processFordNumber(number);
+        } else if (selectedBrand === 'landrover') {
+            result = processLandRoverNumber(number);
         }
         
         if (selectedBrand === 'mercedes' && result.includes('|')) {
@@ -364,5 +366,23 @@ function processFordNumber(number) {
         const firstPart = number.slice(0, 4);
         const secondPart = number.slice(4);
         return `${number} / ${firstPart} ${secondPart}`;
+    }
+}
+
+function processLandRoverNumber(number) {
+    if (number.length > 10) {
+        return processFordNumber(number);
+    }
+
+    const prefix = number.slice(0, 2).toUpperCase();
+
+    if (prefix === 'LR' || prefix === 'L0') {
+        const part1 = number.slice(0, 2);
+        const part2 = number.slice(2);
+        return `${number} / ${part1} ${part2}`;
+    } else {
+        const part1 = number.slice(0, 3);
+        const part2 = number.slice(3);
+        return `${number} / ${part1} ${part2}`;
     }
 }
