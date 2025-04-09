@@ -48,6 +48,8 @@ function processNumbers() {
             result = processMercedesNumber(cleanNumber);
         } else if (selectedBrand === 'bmw') {
             result = processBmwNumber(cleanNumber);
+        } else if (selectedBrand === 'ford') {
+            result = processFordNumber(number);
         }
         
         if (selectedBrand === 'mercedes' && result.includes('|')) {
@@ -329,4 +331,38 @@ function processBmwNumber(number) {
     }
 
     return "Incorrect number or unsupported format.";
+}
+
+function processFordNumber(number) {
+    if (number.length < 5)
+    {
+        return "Incorrect number or unsupported format.";
+    }
+    
+    if (number.includes('-')) {
+        const clean = number.replace(/-/g, '');
+        const parts = number.split('-');
+        if (parts.length === 3) {
+            return `${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
+        } else {
+            return `${clean} / ${parts.join(' ')}`;
+        }
+    }
+
+    const isLetter = (ch) => /^[A-Z]$/i.test(ch);
+
+    if (isLetter(number.at(-1))) {
+        let i = number.length - 1;
+        while (i >= 0 && isLetter(number[i])) {
+            i--;
+        }
+        const suffix = number.slice(i + 1);
+        const firstPart = number.slice(0, 4);
+        const middlePart = number.slice(4, i + 1);
+        return `${number} / ${number.slice(0, number.length - suffix.length)} ${suffix} / ${firstPart} ${middlePart} ${suffix}`;
+    } else {
+        const firstPart = number.slice(0, 4);
+        const secondPart = number.slice(4);
+        return `${number} / ${firstPart} ${secondPart}`;
+    }
 }
