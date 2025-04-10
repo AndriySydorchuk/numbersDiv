@@ -1,9 +1,9 @@
-document.getElementById('brandSelector').addEventListener('change', function() {
+document.getElementById('brandSelector').addEventListener('change', function () {
     localStorage.setItem('selectedBrand', this.value);
     processNumbers();
 });
 
-window.onload = function() {
+window.onload = function () {
     const savedBrand = localStorage.getItem('selectedBrand');
     const brandSelector = document.getElementById('brandSelector');
     if (savedBrand) {
@@ -53,61 +53,64 @@ function processNumbers() {
         } else if (selectedBrand === 'landrover') {
             result = processLandRoverNumber(number);
         }
-        
+
         if (selectedBrand === 'mercedes' && result.includes('|')) {
             const resultContainer = document.createElement('div');
             resultContainer.classList.add('result-item');
             resultContainer.style.display = 'flex';
             resultContainer.style.flexWrap = 'wrap';
             resultContainer.style.gap = '8px';
-        
+            resultContainer.style.backgroundColor = "white";
+
             const resultParts = result.split('|').map(r => r.trim());
-        
+
             resultParts.forEach(res => {
                 const partWrapper = document.createElement('div');
+                partWrapper.classList.add('result-item-hover');
                 partWrapper.style.display = 'flex';
                 partWrapper.style.alignItems = 'center';
                 partWrapper.style.gap = '4px';
                 partWrapper.style.padding = '4px 8px';
-                partWrapper.style.background = '#f9f9f9';
                 partWrapper.style.border = '1px solid #ddd';
                 partWrapper.style.borderRadius = '6px';
-        
-                const copyButton = document.createElement('button');
-                copyButton.classList.add('copy-button');
-                copyButton.textContent = 'Copy';
-                copyButton.onclick = () => {
-                    navigator.clipboard.writeText(res).catch(err => {
-                        console.error('Copy error:', err);
-                    });
-                };
-        
+
+                if (result === "Unsupported format.") {
+                    partWrapper.classList.add('result-disabled');
+                } else {
+                    partWrapper.style.cursor = 'pointer';
+                    partWrapper.onclick = () => {
+                        navigator.clipboard.writeText(res).catch(err => {
+                            console.error('Copy error:', err);
+                        });
+                    };
+                }
+
                 const resultText = document.createElement('span');
                 resultText.textContent = res;
-        
-                partWrapper.appendChild(copyButton);
+
                 partWrapper.appendChild(resultText);
                 resultContainer.appendChild(partWrapper);
             });
-        
+
             resultsDiv.appendChild(resultContainer);
         } else {
             const resultItem = document.createElement('div');
             resultItem.classList.add('result-item');
-        
-            const copyButton = document.createElement('button');
-            copyButton.classList.add('copy-button');
-            copyButton.textContent = 'Copy';
-            copyButton.onclick = () => {
-                navigator.clipboard.writeText(result).catch(err => {
-                    console.error('Copy error:', err);
-                });
-            };
-        
+
+            if (result === "Unsupported format.") {
+                resultItem.classList.add('result-disabled');
+            } else {
+                resultItem.style.cursor = 'pointer';
+                resultItem.onclick = () => {
+                    navigator.clipboard.writeText(result).catch(err => {
+                        console.error('Copy error:', err);
+                    });
+                };
+            }
+
             const resultText = document.createElement('span');
             resultText.textContent = result;
-        
-            resultItem.appendChild(copyButton);
+
             resultItem.appendChild(resultText);
             resultsDiv.appendChild(resultItem);
         }
@@ -290,13 +293,13 @@ function processVagNumber(number) {
         return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9)}`;
     }
     if (number.length >= 12 && number.length <= 13) {
-        return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 10)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9,10)} ${number.slice(10)}`;
+        return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 10)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9, 10)} ${number.slice(10)}`;
     }
     if (number.length === 14) {
-        return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 11)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9,11)} ${number.slice(11)}`;
+        return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 11)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9, 11)} ${number.slice(11)}`;
     }
     if (number.length === 15) {
-        return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 12)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9,12)} ${number.slice(12)}`;
+        return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 12)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9, 12)} ${number.slice(12)}`;
     }
 
     return "Unsupported format.";
@@ -376,11 +379,10 @@ function processBmwNumber(number) {
 }
 
 function processFordNumber(number) {
-    if (number.length < 5)
-    {
+    if (number.length < 5) {
         return "Unsupported format.";
     }
-    
+
     if (number.includes('-')) {
         const clean = number.replace(/-/g, '');
         const parts = number.split('-');

@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     max-width: 100%;
     overflow-x: hidden;
 }
@@ -8,14 +9,16 @@ body {
     margin: 20px;
     width: 100%;
 }
+
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 50%;
     max-width: 1000px;
-    margin:  auto;
+    margin: auto;
 }
+
 .top-bar {
     display: flex;
     justify-content: flex-start;
@@ -23,25 +26,30 @@ body {
     top: 20px;
     left: 20px;
 }
+
 .sidebar {
     margin-right: auto;
 }
+
 .content {
     flex-grow: 1;
     text-align: center;
     width: 100%;
 }
+
 select {
     width: 150px;
     padding: 10px;
     font-size: 16px;
 }
+
 input[type="text"] {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     font-size: 16px;
 }
+
 .result-item {
     display: flex;
     justify-content: flex-start;
@@ -56,11 +64,13 @@ input[type="text"] {
     overflow-x: auto;
     white-space: nowrap;
 }
+
 .result-item span {
     word-wrap: break-word;
     flex-grow: 1;
     text-align: left;
 }
+
 .copy-button {
     padding: 5px 10px;
     margin-right: 10px;
@@ -70,6 +80,7 @@ input[type="text"] {
     border-radius: 4px;
     cursor: pointer;
 }
+
 .copy-button:hover {
     background-color: #0056b3;
 }
@@ -84,8 +95,25 @@ input[type="text"] {
     max-width: 800px;
 }
 
+
+.result-item:hover {
+    background-color: #e0e0e0;
+}
+
+
+.result-item-hover:hover {
+    background-color: #e0e0e0;
+}
+
 @media (max-width: 930px) {
     .container {
-        margin-left:  250px;
+        margin-left: 250px;
     }
-  }
+}
+
+.result-disabled {
+    cursor: default;
+    pointer-events: none;
+    color: gray;
+    background-color: #ececec;
+}
