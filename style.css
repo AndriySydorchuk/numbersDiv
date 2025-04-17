@@ -117,3 +117,7 @@ input[type="text"] {
     color: gray;
     background-color: #ececec;
 }
+
+.choices__inner {
+    min-width: 200px;
+}

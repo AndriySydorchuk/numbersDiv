@@ -1,5 +1,10 @@
-document.getElementById('brandSelector').addEventListener('change', function () {
-    localStorage.setItem('selectedBrand', this.value);
+const brandSelector = new Choices('#brandSelector', {
+    searchEnabled: true,
+    itemSelectText: '',
+});
+
+document.getElementById('brandSelector').addEventListener('change', e => {
+    localStorage.setItem('selectedBrand', e.target.value);
     processNumbers();
 });
 
