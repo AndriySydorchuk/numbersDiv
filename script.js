@@ -193,61 +193,46 @@ function processToyotaOrSubaruNumber(number) {
 }
 
 function processMaseratiNumber(number) {
-    const firstChar = number[0];
-    const secondChar = number[1];
-    const lastChar = number.at(-1);
-    const secondLastChar = number.at(-2);
-
     const isDigitsOnly = /^\d+$/.test(number);
+    if (!isDigitsOnly) return "Unsupported format.";
+    if (number.length < 9) return "Unsupported format.";
+    if (number.length === 9) return number;
 
-    if (isDigitsOnly) {
-        const len = number.length;
+    let start = 0;
+    let end = number.length;
 
-        // 6700693780 / 670069378 0 
-        if (firstChar !== '0' && lastChar === '0' && secondLastChar !== '0') {
-            return `${number} / ${number.slice(0, -1)} ${lastChar}`;
-        }
-
-        // 0670069378 / 0 670069378 
-        if (firstChar === '0' && secondChar !== '0' && lastChar !== '0') {
-            return `${number} / ${firstChar} ${number.slice(1)}`;
-        }
-
-        // 06700693780 / 0 670069378 0
-        if (firstChar === '0' && secondChar !== '0' && lastChar === '0' && secondLastChar !== '0') {
-            return `${number} / ${firstChar} ${number.slice(1, -1)} ${lastChar}`;
-        }
-
-        // 67006937800 / 670069378 00
-        if (firstChar !== '0' && lastChar === '0' && secondLastChar === '0') {
-            return `${number} / ${number.slice(0, -2)} ${number.slice(-2)}`;
-        }
-
-        // 00670069378 / 00 670069378
-        if (firstChar === '0' && secondChar === '0' && lastChar !== '0') {
-            return `${number} / ${number.slice(0, 2)} ${number.slice(2)}`;
-        }
-
-        // 670069378
-        if (firstChar !== '0' && lastChar !== '0') {
-            return number;
-        }
-
-        // 0067006937800 / 00 670069378 00
-        if (firstChar === '0' && secondChar === '0' && lastChar === '0' && secondLastChar === '0') {
-            return `${number} / ${number.slice(0, 2)} ${number.slice(2, -2)} ${number.slice(-2)}`;
-        }
-
-        // 006700693780 / 00 670069378 0
-        if (firstChar === '0' && secondChar === '0' && lastChar === '0') {
-            return `${number} / ${number.slice(0, 2)} ${number.slice(2, -1)} ${lastChar}`;
-        }
-
-        return "Unsupported format.";
+    // Рахуємо нулі з початку
+    while (number[start] === '0') {
+        start++;
     }
 
-    return "Unsupported format.";
+    // НЕ обрізаємо нулі з кінця одразу — натомість спробуємо знайти ядро
+    let core = number.slice(start);
+
+    // Якщо "ядро" довше за 9 — обрізаємо з кінця
+    if (core.length > 9) {
+        core = core.slice(0, 9);
+    }
+
+    // Якщо "ядро" коротше за 9 — розширяємо межі назад у зону нулів на початку
+    while (core.length < 9 && start > 0) {
+        start--;
+        core = number.slice(start, start + 9);
+    }
+
+    // Визначаємо частини
+    const leading = number.slice(0, start);
+    const trailing = number.slice(start + 9);
+
+    let formatted = number + " /";
+    if (leading) formatted += ` ${leading}`;
+    formatted += ` ${core}`;
+    if (trailing) formatted += ` ${trailing}`;
+
+    return formatted;
 }
+
+
 
 function processNissanNumber(number) {
     if (number.length === 10) {
