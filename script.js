@@ -402,7 +402,7 @@ function processFordNumber(number) {
 }
 
 function processLandRoverNumber(number) {
-    if (number.length > 10) {
+    if (number.length >= 9) {
         return processFordNumber(number);
     }
 
