@@ -418,3 +418,55 @@ function processLandRoverNumber(number) {
         return `${number} / ${part1} ${part2}`;
     }
 }
+
+function processText()
+{
+    const input = document.getElementById('inputText').value.trim().toUpperCase();
+    const resultsDiv = document.getElementById('resultText');
+    resultsDiv.innerHTML = '';
+
+    if (input === '') {
+        return;
+    }
+    else
+    {
+        result = input.toUpperCase();
+        const resultItem = document.createElement('div');
+        resultItem.classList.add('result-item');
+
+        
+            resultItem.style.cursor = 'pointer';
+            resultItem.onclick = () => {
+                navigator.clipboard.writeText(result).catch(err => {
+                    console.error('Copy error:', err);
+                });
+            };
+
+        const resultText = document.createElement('span');
+        resultText.textContent = result;
+
+        resultItem.appendChild(resultText);
+        resultsDiv.appendChild(resultItem);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('toggleArrow');
+  const input = document.getElementById('inputText');
+  const result = document.getElementById('resultText');
+  let visible = true;
+
+  toggle.addEventListener('click', () => {
+    visible = !visible;
+
+    if (!visible) {
+      input.style.display = 'none';
+      input.value = '';
+      result.textContent = '';
+    } else {
+      input.style.display = 'block';
+    }
+
+    toggle.textContent = visible ? '✔️' : '➕';
+  });
+});

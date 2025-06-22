@@ -46,7 +46,7 @@ select {
 input[type="text"] {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     font-size: 16px;
 }
 
@@ -91,9 +91,13 @@ input[type="text"] {
 }
 
 #inputNumber {
-    width: 100%;
-    max-width: 800px;
+  width: 100%;              
+  max-width: 800px; 
+  margin-bottom: 10px;   
+  margin-top: 10px;       
+
 }
+
 
 
 .result-item:hover {
@@ -120,4 +124,29 @@ input[type="text"] {
 
 .choices__inner {
     min-width: 200px;
+}
+
+.input-outer {
+  position: relative;       
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 10px;
+}
+
+.input-outer #inputText {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+#toggleArrow {
+  position: absolute;
+  left: -30px;            
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: purple;
+  cursor: pointer;
+  user-select: none;
 }
