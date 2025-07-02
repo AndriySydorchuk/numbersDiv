@@ -57,6 +57,8 @@ function processNumbers() {
             result = processFordNumber(number);
         } else if (selectedBrand === 'landrover') {
             result = processLandRoverNumber(number);
+        } else if (selectedBrand === 'honda') {
+            result = processHondaNumber(number);
         }
 
         if (selectedBrand === 'mercedes' && result.includes('|')) {
@@ -470,3 +472,56 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.textContent = visible ? '✔️' : '➕';
   });
 });
+
+const MAX_HONDA_LENGTH = 13;
+const MIN_HONDA_LENGTH = 5;
+const TWO_PARTS_NUM = 2;
+const THREE_PARTS_NUM = 3;
+const FOUR_PARTS_NUM = 4;
+const ERROR = "Unsupported format.";
+
+function processHondaNumber(number) {
+    const numberWithoutDashes = number.replace(/-/g, '');
+    let numberParts;
+
+    if (testNonEnglishNumber(numberWithoutDashes)) {
+        return ERROR;
+    }
+
+    if (numberWithoutDashes.length < MIN_HONDA_LENGTH) {
+        return ERROR;
+    } else if (numberWithoutDashes.length == MIN_HONDA_LENGTH) {
+        return numberWithoutDashes;
+    }
+
+    if (number.includes('-')) {
+        numberParts = number.split('-');
+
+        switch (numberParts.length) {
+            case TWO_PARTS_NUM: 
+            case THREE_PARTS_NUM:
+                return `${numberWithoutDashes} / ${numberParts.join(' ')}`;
+
+            case FOUR_PARTS_NUM:
+                return `${numberWithoutDashes} / ${numberParts[0]}${numberParts[1]}${numberParts[2]} ${numberParts[3]} / ${numberParts.join(' ')}`;
+            
+            default: 
+                return ERROR;
+        }
+
+    } else {
+        if (number.length > MAX_HONDA_LENGTH) {
+            return ERROR; 
+        }
+
+        numberParts = [number.slice(0, 5), number.slice(5, 8), number.slice(8)];
+        return `${numberWithoutDashes} / ${numberParts[0]} ${numberParts[1]} ${numberParts[2]}`;
+    }
+}
+
+function testNonEnglishNumber(number)
+{
+    if (!/^[A-Za-z0-9-]+$/.test(number)) {
+        return true;
+    }
+}
