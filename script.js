@@ -63,6 +63,8 @@ function processNumbers() {
             result = processFiskerNumber(number);
         } else if (selectedBrand === 'rivian') {
             result = processRivianNumber(number);
+        } else if (selectedBrand === 'lucid') {
+            result = processLucidNumber(number);
         }
 
         if (selectedBrand === 'mercedes' && result.includes('|')) {
@@ -635,6 +637,34 @@ function processRivianNumber(number) {
     } else {
         const firstPart = number.slice(0, 2);
         const secondPart = number.slice(2);
+        return `${number} / ${firstPart} ${secondPart}`;
+    }
+}
+
+function processLucidNumber(number) {
+    if (number.length < 9 || number.startsWith("L0") || /^\d+$/.test(number)) {
+        return "Unsupported format.";
+    }
+
+    if (number.includes('-')) {
+        const clean = number.replace(/-/g, '');
+        const parts = number.split('-');
+        if (parts.length === 3) {
+            return `${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
+        } else {
+            return `${clean} / ${parts.join(' ')}`;
+        }
+    }
+
+    if (number.length == 11) {
+        const part1 = number.slice(0,3);
+        const part2 = number.slice(3, -2);
+        const part3 = number.slice(-2);
+
+        return `${number} / ${part1}${part2} ${part3} / ${part1} ${part2} ${part3}`;
+    } else {
+        const firstPart = number.slice(0, 3);
+        const secondPart = number.slice(3);
         return `${number} / ${firstPart} ${secondPart}`;
     }
 }
