@@ -59,6 +59,8 @@ function processNumbers() {
             result = processLandRoverNumber(number);
         } else if (selectedBrand === 'honda') {
             result = processHondaNumber(number);
+        } else if (selectedBrand === 'fisker') {
+            result = processFiskerNumber(number);
         }
 
         if (selectedBrand === 'mercedes' && result.includes('|')) {
@@ -523,5 +525,81 @@ function testNonEnglishNumber(number)
 {
     if (!/^[A-Za-z0-9-]+$/.test(number)) {
         return true;
+    }
+}
+
+function processFiskerNumber(number) {
+    if (number.length < 12) {
+        return "Unsupported format.";
+    }
+
+    if (number.includes('-')) {
+        const clean = number.replace(/-/g, '');
+        const parts = number.split('-');
+        
+        if(parts.length === 4) {
+            return `${clean} / ${parts[0]}${parts[1]} / ${parts[0]}${parts[1]}${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]} ${parts[3]}`;
+        }
+        if (parts.length === 3) {
+            return `${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
+        } else {
+            return `${clean} / ${parts.join(' ')}`;
+        }
+    }
+
+    const isLetter = (ch) => /^[A-Z]$/i.test(ch);
+
+    if (isLetter(number.at(-1))) {
+        if(isLetter(number.at(-2))) {
+            if(number.length > 16) {
+                const part1 = number.slice(0, 2);
+
+                let i = 2;
+                while (i < number.length && !isNaN(Number(number[i]))) {
+                    i++;
+                }
+
+                const part2 = number.slice(2, i);
+
+                let j = i;
+                while (j < number.length && /[A-Z]/i.test(number[j])) {
+                    j++;
+                }
+
+                const part3 = number.slice(i, j);
+
+                const part4 = number.slice(j);
+
+                return `${number} / ${part1}${part2} / ${part1}${part2}${part3} / ${part1} ${part2} ${part3} ${part4}`;
+            }
+
+
+            const part1 = number.slice(0, 2);
+
+            let i = 2;
+            while (i < number.length && !isNaN(Number(number[i]))) {
+                i++;
+            }
+
+            const part2 = number.slice(2, i); 
+            const part3 = number[i]; 
+            const part4 = number.slice(i + 1);
+
+            return `${number} / ${part1}${part2} / ${part1}${part2}${part3} / ${part1} ${part2} ${part3} ${part4}`;
+        }
+
+
+        let i = number.length - 1;
+        while (i >= 0 && isLetter(number[i])) {
+            i--;
+        }
+        const suffix = number.slice(i + 1);
+        const firstPart = number.slice(0, 2);
+        const middlePart = number.slice(2, i + 1);
+        return `${number} / ${number.slice(0, number.length - suffix.length)} ${suffix} / ${firstPart} ${middlePart} ${suffix}`;
+    } else {
+        const firstPart = number.slice(0, 2);
+        const secondPart = number.slice(2);
+        return `${number} / ${firstPart} ${secondPart}`;
     }
 }
