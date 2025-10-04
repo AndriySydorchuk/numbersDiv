@@ -2,6 +2,8 @@ html,
 body {
     max-width: 100%;
     overflow-x: hidden;
+    transition: 0.3s;
+
 }
 
 body {
@@ -196,4 +198,70 @@ input[type="text"] {
     left: 90px;
     transform: translateX(-100%);
     background: linear-gradient(180deg, #777, #3a3a3a);
+}
+
+body.dark {
+    background-color: #121212;
+    color: #f1f1f1;
+    transition: 0.3s;
+}
+
+body.dark .result-item {
+    background-color: #2a2a2a;
+    border-color: #444;
+    transition: 0.3s;
+}
+
+body.dark .result-item:hover {
+    background-color: #3a3a3a;
+    border-color: #444;
+    transition: 0.3s;
+}
+
+body.dark input[type="text"],
+body.dark select {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+    border: 1px solid #555;
+    transition: 0.3s;
+}
+
+body.dark .copy-button {
+    background-color: #444;
+    color: #fff;
+    transition: 0.3s;
+}
+
+body.dark .copy-button:hover {
+    background-color: #666;
+    transition: 0.3s;
+}
+
+body.dark .choices__inner {
+  background-color: #1e1e1e !important;
+  color: #f1f1f1 !important;
+  border: 1px solid #555 !important;
+  transition: 0.3s !important;
+}
+
+body.dark .choices__list--dropdown {
+  background-color: #1e1e1e !important;
+  color: #f1f1f1 !important;
+  border: 1px solid #555 !important;
+}
+
+body.dark .choices__list--dropdown .choices__input {
+  background-color: #1e1e1e !important;
+  color: #f1f1f1 !important;
+  border: 1px solid #555 !important;
+}
+
+body.dark .choices__list--dropdown .choices__item {
+  background-color: #1e1e1e !important;
+  color: #f1f1f1 !important;
+}
+
+body.dark .choices__list--dropdown .choices__item--selectable:hover {
+  background-color: #333 !important;
+  color: #fff !important;
 }
