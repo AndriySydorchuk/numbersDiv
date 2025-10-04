@@ -668,3 +668,35 @@ function processLucidNumber(number) {
         return `${number} / ${firstPart} ${secondPart}`;
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleMode = document.querySelector('#darkmode-toggle');
+
+    toggleMode.addEventListener('change', () => {
+        document.body.classList.toggle('dark', toggleMode.checked);
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleMode = document.querySelector('#darkmode-toggle');
+  const body = document.body;
+
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    body.classList.add("dark");
+    toggleMode.checked = true;
+  } else {
+    body.classList.remove("dark");
+    toggleMode.checked = false;
+  }
+
+  toggleMode.addEventListener("change", () => {
+    if (toggleMode.checked) {
+      body.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      body.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  });
+});
