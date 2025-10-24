@@ -73,7 +73,6 @@ function processNumbers() {
             resultContainer.style.display = 'flex';
             resultContainer.style.flexWrap = 'wrap';
             resultContainer.style.gap = '8px';
-            resultContainer.style.backgroundColor = "white";
 
             const resultParts = result.split('|').map(r => r.trim());
 

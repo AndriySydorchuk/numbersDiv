@@ -212,11 +212,18 @@ body.dark .result-item {
     transition: 0.3s;
 }
 
-body.dark .result-item:hover {
-    background-color: #3a3a3a;
-    border-color: #444;
-    transition: 0.3s;
+body.dark:not(:has(.result-item-hover)) .result-item:hover {
+  background-color: #3a3a3a;
+  border-color: #444;
+  transition: 0.3s;
 }
+
+body.dark:has(.result-item-hover) .result-item-hover:hover {
+  background-color: #3a3a3a;
+  border-color: #444;
+  transition: 0.3s;
+}
+
 
 body.dark input[type="text"],
 body.dark select {
