@@ -67,13 +67,23 @@ function processNumbers() {
             result = processLucidNumber(number);
         }
 
-        if (selectedBrand === 'mercedes' && result.includes('|')) {
+        if (result === "Unsupported format.") {
+            const resultItem = document.createElement('div');
+            resultItem.classList.add('result-item');
+            resultItem.classList.add('result-disabled');
+
+            const resultText = document.createElement('span');
+            resultText.textContent = result;
+
+            resultItem.appendChild(resultText);
+            resultsDiv.appendChild(resultItem);
+
+        } else {
             const resultContainer = document.createElement('div');
             resultContainer.classList.add('result-item');
             resultContainer.style.display = 'flex';
             resultContainer.style.flexWrap = 'wrap';
-            resultContainer.style.gap = '8px';
-            resultContainer.style.backgroundColor = "white";
+            resultContainer.style.gap = '16px';
 
             const resultParts = result.split('|').map(r => r.trim());
 
@@ -83,7 +93,7 @@ function processNumbers() {
                 partWrapper.style.display = 'flex';
                 partWrapper.style.alignItems = 'center';
                 partWrapper.style.gap = '4px';
-                partWrapper.style.padding = '4px 8px';
+                partWrapper.style.padding = '8px 16px';
                 partWrapper.style.border = '1px solid #ddd';
                 partWrapper.style.borderRadius = '6px';
 
@@ -106,26 +116,6 @@ function processNumbers() {
             });
 
             resultsDiv.appendChild(resultContainer);
-        } else {
-            const resultItem = document.createElement('div');
-            resultItem.classList.add('result-item');
-
-            if (result === "Unsupported format.") {
-                resultItem.classList.add('result-disabled');
-            } else {
-                resultItem.style.cursor = 'pointer';
-                resultItem.onclick = () => {
-                    navigator.clipboard.writeText(result).catch(err => {
-                        console.error('Copy error:', err);
-                    });
-                };
-            }
-
-            const resultText = document.createElement('span');
-            resultText.textContent = result;
-
-            resultItem.appendChild(resultText);
-            resultsDiv.appendChild(resultItem);
         }
     });
 }
@@ -142,23 +132,23 @@ function processMoparNumber(number) {
         const len = number.length;
 
         if (firstChar !== '0' && lastChar === '0' && secondLastChar !== '0') {
-            return `${number} / ${number.slice(0, -1)} ${lastChar}`;
+            return `${number} | ${number} / ${number.slice(0, -1)} ${lastChar}`;
         }
 
         if (firstChar === '0' && secondChar !== '0' && lastChar !== '0') {
-            return `${number} / ${firstChar} ${number.slice(1)}`;
+            return `${number} | ${number} / ${firstChar} ${number.slice(1)}`;
         }
 
         if (firstChar === '0' && secondChar !== '0' && lastChar === '0' && secondLastChar !== '0') {
-            return `${number} / ${firstChar} ${number.slice(1)} / ${firstChar} ${number.slice(1, -1)} ${lastChar}`;
+            return `${number} | ${number} / ${firstChar} ${number.slice(1)} / ${firstChar} ${number.slice(1, -1)} ${lastChar}`;
         }
 
         if (firstChar !== '0' && lastChar === '0' && secondLastChar === '0') {
-            return `${number} / ${number.slice(0, -2)} ${number.slice(-2)}`;
+            return `${number} | ${number} / ${number.slice(0, -2)} ${number.slice(-2)}`;
         }
 
         if (firstChar === '0' && secondChar === '0' && lastChar !== '0') {
-            return `${number} / ${number.slice(0, 2)} ${number.slice(2)}`;
+            return `${number} | ${number} / ${number.slice(0, 2)} ${number.slice(2)}`;
         }
 
         if (firstChar !== '0' && lastChar !== '0') {
@@ -166,11 +156,11 @@ function processMoparNumber(number) {
         }
 
         if (firstChar === '0' && secondChar === '0' && lastChar === '0' && secondLastChar === '0') {
-            return `${number} / ${number.slice(0, 2)} ${number.slice(2)} / ${number.slice(0, 2)} ${number.slice(2, -2)} ${number.slice(-2)}`;
+            return `${number} | ${number} / ${number.slice(0, 2)} ${number.slice(2)} / ${number.slice(0, 2)} ${number.slice(2, -2)} ${number.slice(-2)}`;
         }
 
         if (firstChar === '0' && secondChar === '0' && lastChar === '0') {
-            return `${number} / ${number.slice(0, 2)} ${number.slice(2)} / ${number.slice(0, 2)} ${number.slice(2, -1)} ${lastChar}`;
+            return `${number} | ${number} / ${number.slice(0, 2)} ${number.slice(2)} / ${number.slice(0, 2)} ${number.slice(2, -1)} ${lastChar}`;
         }
 
         return "Unsupported format.";
@@ -178,7 +168,7 @@ function processMoparNumber(number) {
 
     const match = number.match(/^(\w+?)(\w{2})$/);
     if (match) {
-        return `${number} / ${match[1]} ${match[2]}`;
+        return `${number} | ${number} / ${match[1]} ${match[2]}`;
     }
 
     return "Unsupported format.";
@@ -191,7 +181,7 @@ function processToyotaOrSubaruNumber(number) {
     if (number.length === mainPartLength) {
         const part1 = number.slice(0, 5);
         const part2 = number.slice(5);
-        return `${number} / ${part1} ${part2}`;
+        return `${number} | ${number} / ${part1} ${part2}`;
     }
 
     if (number.length > mainPartLength) {
@@ -199,7 +189,7 @@ function processToyotaOrSubaruNumber(number) {
         const suffix = number.slice(mainPartLength);
         const part1 = mainPart.slice(0, 5);
         const part2 = mainPart.slice(5);
-        return `${number} / ${mainPart} ${suffix} / ${part1} ${part2} ${suffix}`;
+        return `${number} | ${number} / ${mainPart} ${suffix} / ${part1} ${part2} ${suffix}`;
     }
 
     return "Unsupported format.";
@@ -237,7 +227,7 @@ function processMaseratiNumber(number) {
     const leading = number.slice(0, start);
     const trailing = number.slice(start + 9);
 
-    let formatted = number + " /";
+    let formatted = number + " | " + number + " /";
     if (leading) formatted += ` ${leading}`;
     formatted += ` ${core}`;
     if (trailing) formatted += ` ${trailing}`;
@@ -249,55 +239,55 @@ function processMaseratiNumber(number) {
 
 function processNissanNumber(number) {
     if (number.length === 10) {
-        return `${number} / ${number.slice(0, 5)} ${number.slice(5)}`;
+        return `${number} | ${number} / ${number.slice(0, 5)} ${number.slice(5)}`;
     }
     return "Unsupported format.";
 }
 
 function processMazdaNumber(number) {
     if (number.length === 9 || number.length === 10) {
-        return `${number} / ${number.slice(0, 4)} ${number.slice(4, 6)} ${number.slice(6)}`;
+        return `${number} | ${number} / ${number.slice(0, 4)} ${number.slice(4, 6)} ${number.slice(6)}`;
     }
     if (number.length >= 11 && number.length <= 13) {
         let variant1 = `${number.slice(0, number.length - 2)} ${number.slice(-2)}`;
         let variant2 = `${number.slice(0, 4)} ${number.slice(4, 6)} ${number.slice(6, number.length - 2)} ${number.slice(-2)}`;
-        return `${number} / ${variant1} / ${variant2}`;
+        return `${number} | ${number} / ${variant1} / ${variant2}`;
     }
     return "Unsupported format.";
 }
 
 function processMitsubishiNumber(number) {
     if (number.length === 8) {
-        return `${number} / ${number.slice(0, 4)} ${number.slice(4)}`;
+        return `${number} | ${number} / ${number.slice(0, 4)} ${number.slice(4)}`;
     }
     if (number.length >= 10) {
-        return `${number} / ${number.slice(0, 8)} ${number.slice(8)} / ${number.slice(0, 4)} ${number.slice(4, 8)} ${number.slice(8)}`;
+        return `${number} | ${number} / ${number.slice(0, 8)} ${number.slice(8)} / ${number.slice(0, 4)} ${number.slice(4, 8)} ${number.slice(8)}`;
     }
     return "Unsupported format.";
 }
 
 function processTeslaNumber(number) {
     if (number.length === 10) {
-        return `${number} / ${number.slice(0, 9)} ${number.slice(9)} / ${number.slice(0, 7)} ${number.slice(7, 9)} ${number.slice(9)}`;
+        return `${number} | ${number} / ${number.slice(0, 9)} ${number.slice(9)} / ${number.slice(0, 7)} ${number.slice(7, 9)} ${number.slice(9)}`;
     }
     return "Unsupported format.";
 }
 
 function processVagNumber(number) {
     if (number.length <= 9) {
-        return `${number} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
+        return `${number} | ${number} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
     }
     if (number.length >= 10 && number.length <= 12) {
-        return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9)}`;
+        return `${number} | ${number} / ${number.slice(0, 9)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9)}`;
     }
     if (number.length >= 12 && number.length <= 13) {
-        return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 10)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9, 10)} ${number.slice(10)}`;
+        return `${number} | ${number} / ${number.slice(0, 9)} / ${number.slice(0, 10)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9, 10)} ${number.slice(10)}`;
     }
     if (number.length === 14) {
-        return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 11)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9, 11)} ${number.slice(11)}`;
+        return `${number} | ${number} / ${number.slice(0, 9)} / ${number.slice(0, 11)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9, 11)} ${number.slice(11)}`;
     }
     if (number.length === 15) {
-        return `${number} / ${number.slice(0, 9)} / ${number.slice(0, 12)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9, 12)} ${number.slice(12)}`;
+        return `${number} | ${number} / ${number.slice(0, 9)} / ${number.slice(0, 12)} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6, 9)} ${number.slice(9, 12)} ${number.slice(12)}`;
     }
 
     return "Unsupported format.";
@@ -320,7 +310,7 @@ function processMercedesNumber(number) {
 
     if (isWithA) {
         if (len === 11) {
-            return `${number} / ${raw} / ${baseSplit}`;
+            return `${number} | ${number} / ${raw} / ${baseSplit}`;
         }
         if (len === 13) {
             return `${number} | ${raw.slice(0, -2)} / ${raw} / ${baseSplit} ${fifthFour}`;
@@ -335,7 +325,7 @@ function processMercedesNumber(number) {
         const withA = `A${number}`;
 
         if (len === 10) {
-            return `${withA} / ${number} / ${baseSplit}`;
+            return `${withA} | ${withA} / ${number} / ${baseSplit}`;
         }
         if (len === 12) {
             return `${withA} | ${number.slice(0, -2)} / ${number} / ${baseSplit} ${fifthFour}`;
@@ -349,7 +339,7 @@ function processMercedesNumber(number) {
     }
 
     if (len <= 9) {
-        return `${number} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
+        return `${number} | ${number} / ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
     }
 
     return "Unsupported format.";
@@ -363,14 +353,14 @@ function processBmwNumber(number) {
         const part1 = number.slice(0, 1);
         const part2 = number.slice(1, 4);
         const part3 = number.slice(4);
-        return `${number} / ${part1} ${part2} ${part3}`;
+        return `${number} | ${number} / ${part1} ${part2} ${part3}`;
     }
 
     if (number.length === 11) {
         // Long number: 5143 7288219 and 51 43 7 288 219
         const split1 = `${number.slice(0, 4)} ${number.slice(4)}`;
         const split2 = `${number.slice(0, 2)} ${number.slice(2, 4)} ${number.slice(4, 5)} ${number.slice(5, 8)} ${number.slice(8)}`;
-        return `${number} / ${split1} / ${split2}`;
+        return `${number} | ${number} / ${split1} / ${split2}`;
     }
 
     return "Unsupported format.";
@@ -385,9 +375,9 @@ function processFordNumber(number) {
         const clean = number.replace(/-/g, '');
         const parts = number.split('-');
         if (parts.length === 3) {
-            return `${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
+            return `${clean} | ${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
         } else {
-            return `${clean} / ${parts.join(' ')}`;
+            return `${clean} | ${clean} / ${parts.join(' ')}`;
         }
     }
 
@@ -401,11 +391,11 @@ function processFordNumber(number) {
         const suffix = number.slice(i + 1);
         const firstPart = number.slice(0, 4);
         const middlePart = number.slice(4, i + 1);
-        return `${number} / ${number.slice(0, number.length - suffix.length)} ${suffix} / ${firstPart} ${middlePart} ${suffix}`;
+        return `${number} | ${number} / ${number.slice(0, number.length - suffix.length)} ${suffix} / ${firstPart} ${middlePart} ${suffix}`;
     } else {
         const firstPart = number.slice(0, 4);
         const secondPart = number.slice(4);
-        return `${number} / ${firstPart} ${secondPart}`;
+        return `${number} | ${number} / ${firstPart} ${secondPart}`;
     }
 }
 
@@ -419,16 +409,15 @@ function processLandRoverNumber(number) {
     if (prefix === 'LR' || prefix === 'L0') {
         const part1 = number.slice(0, 2);
         const part2 = number.slice(2);
-        return `${number} / ${part1} ${part2}`;
+        return `${number} | ${number} / ${part1} ${part2}`;
     } else {
         const part1 = number.slice(0, 3);
         const part2 = number.slice(3);
-        return `${number} / ${part1} ${part2}`;
+        return `${number} | ${number} / ${part1} ${part2}`;
     }
 }
 
-function processText()
-{
+function processText() {
     const input = document.getElementById('inputText').value.trim().toUpperCase();
     const resultsDiv = document.getElementById('resultText');
     resultsDiv.innerHTML = '';
@@ -436,19 +425,18 @@ function processText()
     if (input === '') {
         return;
     }
-    else
-    {
+    else {
         result = input.toUpperCase();
         const resultItem = document.createElement('div');
         resultItem.classList.add('result-item');
 
-        
-            resultItem.style.cursor = 'pointer';
-            resultItem.onclick = () => {
-                navigator.clipboard.writeText(result).catch(err => {
-                    console.error('Copy error:', err);
-                });
-            };
+
+        resultItem.style.cursor = 'pointer';
+        resultItem.onclick = () => {
+            navigator.clipboard.writeText(result).catch(err => {
+                console.error('Copy error:', err);
+            });
+        };
 
         const resultText = document.createElement('span');
         resultText.textContent = result;
@@ -459,24 +447,24 @@ function processText()
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const toggle = document.getElementById('toggleArrow');
-  const input = document.getElementById('inputText');
-  const result = document.getElementById('resultText');
-  let visible = true;
+    const toggle = document.getElementById('toggleArrow');
+    const input = document.getElementById('inputText');
+    const result = document.getElementById('resultText');
+    let visible = true;
 
-  toggle.addEventListener('click', () => {
-    visible = !visible;
+    toggle.addEventListener('click', () => {
+        visible = !visible;
 
-    if (!visible) {
-      input.style.display = 'none';
-      input.value = '';
-      result.textContent = '';
-    } else {
-      input.style.display = 'block';
-    }
+        if (!visible) {
+            input.style.display = 'none';
+            input.value = '';
+            result.textContent = '';
+        } else {
+            input.style.display = 'block';
+        }
 
-    toggle.textContent = visible ? '✔️' : '➕';
-  });
+        toggle.textContent = visible ? '✔️' : '➕';
+    });
 });
 
 const MAX_HONDA_LENGTH = 13;
@@ -504,29 +492,28 @@ function processHondaNumber(number) {
         numberParts = number.split('-');
 
         switch (numberParts.length) {
-            case TWO_PARTS_NUM: 
+            case TWO_PARTS_NUM:
             case THREE_PARTS_NUM:
-                return `${numberWithoutDashes} / ${numberParts.join(' ')}`;
+                return `${numberWithoutDashes} | ${numberWithoutDashes} / ${numberParts.join(' ')}`;
 
             case FOUR_PARTS_NUM:
-                return `${numberWithoutDashes} / ${numberParts[0]}${numberParts[1]}${numberParts[2]} ${numberParts[3]} / ${numberParts.join(' ')}`;
-            
-            default: 
+                return `${numberWithoutDashes} | ${numberWithoutDashes} / ${numberParts[0]}${numberParts[1]}${numberParts[2]} ${numberParts[3]} / ${numberParts.join(' ')}`;
+
+            default:
                 return ERROR;
         }
 
     } else {
         if (number.length > MAX_HONDA_LENGTH) {
-            return ERROR; 
+            return ERROR;
         }
 
         numberParts = [number.slice(0, 5), number.slice(5, 8), number.slice(8)];
-        return `${numberWithoutDashes} / ${numberParts[0]} ${numberParts[1]} ${numberParts[2]}`;
+        return `${numberWithoutDashes} | ${numberWithoutDashes} / ${numberParts[0]} ${numberParts[1]} ${numberParts[2]}`;
     }
 }
 
-function testNonEnglishNumber(number)
-{
+function testNonEnglishNumber(number) {
     if (!/^[A-Za-z0-9-]+$/.test(number)) {
         return true;
     }
@@ -540,22 +527,22 @@ function processFiskerNumber(number) {
     if (number.includes('-')) {
         const clean = number.replace(/-/g, '');
         const parts = number.split('-');
-        
-        if(parts.length === 4) {
-            return `${clean} / ${parts[0]}${parts[1]} / ${parts[0]}${parts[1]}${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]} ${parts[3]}`;
+
+        if (parts.length === 4) {
+            return `${clean} | ${clean} / ${parts[0]}${parts[1]} / ${parts[0]}${parts[1]}${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]} ${parts[3]}`;
         }
         if (parts.length === 3) {
-            return `${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
+            return `${clean} | ${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
         } else {
-            return `${clean} / ${parts.join(' ')}`;
+            return `${clean} | ${clean} / ${parts.join(' ')}`;
         }
     }
 
     const isLetter = (ch) => /^[A-Z]$/i.test(ch);
 
     if (isLetter(number.at(-1))) {
-        if(isLetter(number.at(-2))) {
-            if(number.length > 16) {
+        if (isLetter(number.at(-2))) {
+            if (number.length > 16) {
                 const part1 = number.slice(0, 2);
 
                 let i = 2;
@@ -574,7 +561,7 @@ function processFiskerNumber(number) {
 
                 const part4 = number.slice(j);
 
-                return `${number} / ${part1}${part2} / ${part1}${part2}${part3} / ${part1} ${part2} ${part3} ${part4}`;
+                return `${number} | ${number} / ${part1}${part2} / ${part1}${part2}${part3} / ${part1} ${part2} ${part3} ${part4}`;
             }
 
 
@@ -585,11 +572,11 @@ function processFiskerNumber(number) {
                 i++;
             }
 
-            const part2 = number.slice(2, i); 
-            const part3 = number[i]; 
+            const part2 = number.slice(2, i);
+            const part3 = number[i];
             const part4 = number.slice(i + 1);
 
-            return `${number} / ${part1}${part2} / ${part1}${part2}${part3} / ${part1} ${part2} ${part3} ${part4}`;
+            return `${number} | ${number} / ${part1}${part2} / ${part1}${part2}${part3} / ${part1} ${part2} ${part3} ${part4}`;
         }
 
 
@@ -600,46 +587,55 @@ function processFiskerNumber(number) {
         const suffix = number.slice(i + 1);
         const firstPart = number.slice(0, 2);
         const middlePart = number.slice(2, i + 1);
-        return `${number} / ${number.slice(0, number.length - suffix.length)} ${suffix} / ${firstPart} ${middlePart} ${suffix}`;
+        return `${number} | ${number} / ${number.slice(0, number.length - suffix.length)} ${suffix} / ${firstPart} ${middlePart} ${suffix}`;
     } else {
         const firstPart = number.slice(0, 2);
         const secondPart = number.slice(2);
-        return `${number} / ${firstPart} ${secondPart}`;
+        return `${number} | ${number} / ${firstPart} ${secondPart}`;
     }
 }
 
 function processRivianNumber(number) {
+    if (!number || typeof number !== 'string') return "Unsupported format.";
+    number = number.trim();
     if (number.length < 10) {
         return "Unsupported format.";
     }
 
     if (number.includes('-')) {
         const clean = number.replace(/-/g, '');
-        const parts = number.split('-');
+        const parts = number.split('-').filter(Boolean);
+
         if (parts.length === 3) {
-            return `${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
+            return `${clean} | ${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
         } else {
-            return `${clean} / ${parts.join(' ')}`;
+            return `${clean} | ${clean} / ${parts.join(' ')}`;
         }
     }
 
     const isLetter = (ch) => /^[A-Z]$/i.test(ch);
 
+    const mFiveDigitPrefix = number.toUpperCase().match(/^(\d{5})([A-Z][A-Z0-9]*)$/);
+    if (mFiveDigitPrefix) {
+        const first5 = mFiveDigitPrefix[1];
+        const rest = mFiveDigitPrefix[2];
+        return `${number} | ${number} / ${first5} ${rest}`;
+    }
+
     if (isLetter(number.at(-1))) {
         let i = number.length - 1;
-        while (i >= 0 && isLetter(number[i])) {
-            i--;
-        }
+        while (i >= 0 && isLetter(number[i])) i--;
         const suffix = number.slice(i + 1);
         const firstPart = number.slice(0, 2);
         const middlePart = number.slice(2, i + 1);
-        return `${number} / ${number.slice(0, number.length - suffix.length)} ${suffix} / ${firstPart} ${middlePart} ${suffix}`;
-    } else {
-        const firstPart = number.slice(0, 2);
-        const secondPart = number.slice(2);
-        return `${number} / ${firstPart} ${secondPart}`;
+        return `${number} | ${number} / ${number.slice(0, number.length - suffix.length)} ${suffix} / ${firstPart} ${middlePart} ${suffix}`;
     }
+
+    const firstPart = number.slice(0, 2);
+    const secondPart = number.slice(2);
+    return `${number} | ${number} / ${firstPart} ${secondPart}`;
 }
+
 
 function processLucidNumber(number) {
     if (number.length < 9 || number.startsWith("L0") || /^\d+$/.test(number)) {
@@ -650,22 +646,22 @@ function processLucidNumber(number) {
         const clean = number.replace(/-/g, '');
         const parts = number.split('-');
         if (parts.length === 3) {
-            return `${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
+            return `${clean} | ${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
         } else {
-            return `${clean} / ${parts.join(' ')}`;
+            return `${clean} | ${clean} / ${parts.join(' ')}`;
         }
     }
 
     if (number.length == 11) {
-        const part1 = number.slice(0,3);
+        const part1 = number.slice(0, 3);
         const part2 = number.slice(3, -2);
         const part3 = number.slice(-2);
 
-        return `${number} / ${part1}${part2} ${part3} / ${part1} ${part2} ${part3}`;
+        return `${number} | ${number} / ${part1}${part2} ${part3} / ${part1} ${part2} ${part3}`;
     } else {
         const firstPart = number.slice(0, 3);
         const secondPart = number.slice(3);
-        return `${number} / ${firstPart} ${secondPart}`;
+        return `${number} | ${number} / ${firstPart} ${secondPart}`;
     }
 }
 
@@ -678,25 +674,25 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  const toggleMode = document.querySelector('#darkmode-toggle');
-  const body = document.body;
+    const toggleMode = document.querySelector('#darkmode-toggle');
+    const body = document.body;
 
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark") {
-    body.classList.add("dark");
-    toggleMode.checked = true;
-  } else {
-    body.classList.remove("dark");
-    toggleMode.checked = false;
-  }
-
-  toggleMode.addEventListener("change", () => {
-    if (toggleMode.checked) {
-      body.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+        body.classList.add("dark");
+        toggleMode.checked = true;
     } else {
-      body.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+        body.classList.remove("dark");
+        toggleMode.checked = false;
     }
-  });
+
+    toggleMode.addEventListener("change", () => {
+        if (toggleMode.checked) {
+            body.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            body.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+    });
 });
