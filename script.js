@@ -374,6 +374,9 @@ function processFordNumber(number) {
     if (number.includes('-')) {
         const clean = number.replace(/-/g, '');
         const parts = number.split('-');
+        if (parts.length === 4) {
+            return `${clean} | ${clean} / ${parts[0]}${parts[1]}${parts[2]} ${parts[3]} / ${parts[0]} ${parts[1]} ${parts[2]} ${parts[3]}`
+        }
         if (parts.length === 3) {
             return `${clean} | ${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
         } else {
