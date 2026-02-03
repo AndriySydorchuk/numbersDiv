@@ -393,11 +393,31 @@ function processFordNumber(number) {
     }
 }
 
+function isOnlyDigits(str) {
+    return /^\d+$/.test(str);
+}
+
+function seemsJaguar(number) {
+    number = number.toLowerCase();
+    if (number.startsWith('t2h') ||
+        number.startsWith('t2r') ||
+        number.startsWith('t4n') ||
+        number.startsWith('t4a') ||
+        number.startsWith('j9c') ||
+        number.startsWith('c2z') ||
+        number.startsWith('c2s')) {
+        return true;
+    }
+
+    return false;
+}
+
 function processLandRoverNumber(number) {
-    if (number.toLowerCase().startsWith('t2h') ||
-        number.toLowerCase().startsWith('t4n') ||
-        number.toLowerCase().startsWith('j9c') ||
-        number.toLowerCase().startsWith('c2z')) {
+    if (isOnlyDigits(number)) {
+        return number;
+    }
+
+    if (seemsJaguar(number)) {
         if (number.includes('-')) {
             const clean = number.replace(/-/g, '');
             const parts = number.split('-');
