@@ -204,26 +204,21 @@ function processMaseratiNumber(number) {
     let start = 0;
     let end = number.length;
 
-    // Рахуємо нулі з початку
     while (number[start] === '0') {
         start++;
     }
 
-    // НЕ обрізаємо нулі з кінця одразу — натомість спробуємо знайти ядро
     let core = number.slice(start);
 
-    // Якщо "ядро" довше за 9 — обрізаємо з кінця
     if (core.length > 9) {
         core = core.slice(0, 9);
     }
 
-    // Якщо "ядро" коротше за 9 — розширяємо межі назад у зону нулів на початку
     while (core.length < 9 && start > 0) {
         start--;
         core = number.slice(start, start + 9);
     }
 
-    // Визначаємо частини
     const leading = number.slice(0, start);
     const trailing = number.slice(start + 9);
 
@@ -346,10 +341,7 @@ function processMercedesNumber(number) {
 }
 
 function processBmwNumber(number) {
-    //const onlyDigits = number.replace(/\D/g, '');
-
     if (number.length === 7) {
-        // Short number: 7 221 001
         const part1 = number.slice(0, 1);
         const part2 = number.slice(1, 4);
         const part3 = number.slice(4);
@@ -357,7 +349,6 @@ function processBmwNumber(number) {
     }
 
     if (number.length === 11) {
-        // Long number: 5143 7288219 and 51 43 7 288 219
         const split1 = `${number.slice(0, 4)} ${number.slice(4)}`;
         const split2 = `${number.slice(0, 2)} ${number.slice(2, 4)} ${number.slice(4, 5)} ${number.slice(5, 8)} ${number.slice(8)}`;
         return `${number} | ${number} / ${split1} / ${split2}`;
@@ -403,6 +394,38 @@ function processFordNumber(number) {
 }
 
 function processLandRoverNumber(number) {
+    if (number.toLowerCase().startsWith('t2h') ||
+        number.toLowerCase().startsWith('t4n') ||
+        number.toLowerCase().startsWith('j9c') ||
+        number.toLowerCase().startsWith('c2z')) {
+        if (number.includes('-')) {
+            const clean = number.replace(/-/g, '');
+            const parts = number.split('-');
+            if (parts.length === 3) {
+                return `${clean} | ${clean} / ${parts[0]}${parts[1]} ${parts[2]} / ${parts[0]} ${parts[1]} ${parts[2]}`;
+            } else {
+                return `${clean} | ${clean} / ${parts.join(' ')}`;
+            }
+        }
+
+        const isLetter = (ch) => /^[A-Z]$/i.test(ch);
+
+        if (isLetter(number.at(-1))) {
+            let i = number.length - 1;
+            while (i >= 0 && isLetter(number[i])) {
+                i--;
+            }
+            const suffix = number.slice(i + 1);
+            const firstPart = number.slice(0, 3);
+            const middlePart = number.slice(3, i + 1);
+            return `${number} | ${number} / ${number.slice(0, number.length - suffix.length)} ${suffix} / ${firstPart} ${middlePart} ${suffix}`;
+        } else {
+            const firstPart = number.slice(0, 3);
+            const secondPart = number.slice(3);
+            return `${number} | ${number} / ${firstPart} ${secondPart}`;
+        }
+    }
+
     if (number.length >= 9) {
         return processFordNumber(number);
     }
